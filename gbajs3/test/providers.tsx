@@ -1,4 +1,4 @@
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from '@emotion/react';
 
 import { AuthProvider } from '../src/context/auth/auth.tsx';
 import { EmulatorContextProvider } from '../src/context/emulator/emulator-context-provider.tsx';

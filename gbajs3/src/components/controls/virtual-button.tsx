@@ -1,6 +1,6 @@
+import styled from '@emotion/styled';
 import { useRef, type ReactNode } from 'react';
 import Draggable from 'react-draggable';
-import { styled } from 'styled-components';
 
 import {
   useDragContext,

@@ -1,8 +1,8 @@
+import { useTheme } from '@emotion/react';
 import { Button, Divider, TextField } from '@mui/material';
 import { useCallback, useEffect, useId, useState } from 'react';
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
 import { BiError } from 'react-icons/bi';
-import { useTheme } from 'styled-components';
 
 import { ModalBody } from './modal-body.tsx';
 import { ModalFooter } from './modal-footer.tsx';

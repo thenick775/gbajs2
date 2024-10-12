@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import {
   useCallback,
   useEffect,
@@ -6,7 +7,6 @@ import {
   type PointerEvent
 } from 'react';
 import Draggable from 'react-draggable';
-import { styled } from 'styled-components';
 
 import {
   useDragContext,

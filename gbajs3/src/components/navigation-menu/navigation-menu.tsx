@@ -1,3 +1,5 @@
+import { useTheme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { useMediaQuery } from '@mui/material';
 import { useId, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -22,7 +24,6 @@ import {
   BiMenu,
   BiFileFind
 } from 'react-icons/bi';
-import { styled, useTheme } from 'styled-components';
 
 import { NavigationMenuWidth } from './consts.tsx';
 import { NavComponent } from './nav-component.tsx';

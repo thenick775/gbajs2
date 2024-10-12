@@ -1,5 +1,5 @@
+import styled from '@emotion/styled';
 import React, { type ReactNode } from 'react';
-import { styled } from 'styled-components';
 
 type ButtonBaseProps = {
   children?: ReactNode;

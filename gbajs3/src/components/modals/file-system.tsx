@@ -1,6 +1,6 @@
+import styled from '@emotion/styled';
 import { Button } from '@mui/material';
 import { useCallback, useId, useState } from 'react';
-import { styled } from 'styled-components';
 
 import { EmulatorFileSystem } from './file-system/emulator-file-system.tsx';
 import { FileSystemOptionsForm } from './file-system/file-system-options-form.tsx';

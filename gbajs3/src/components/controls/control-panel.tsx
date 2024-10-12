@@ -1,3 +1,6 @@
+import { css } from '@emotion/css';
+import { useTheme, type Theme } from '@emotion/react';
+import styled from '@emotion/styled';
 import { IconButton, Slider, useMediaQuery } from '@mui/material';
 import { useLocalStorage } from '@uidotdev/usehooks';
 import { useCallback, useId, useState, type ReactNode } from 'react';
@@ -13,7 +16,6 @@ import {
 } from 'react-icons/bi';
 import { TbResize } from 'react-icons/tb';
 import { Rnd } from 'react-rnd';
-import { css, styled, useTheme } from 'styled-components';
 
 import {
   emulatorVolumeLocalStorageKey,
@@ -98,9 +100,12 @@ const PanelControlWrapper = styled.li`
   display: contents;
 `;
 
-const InteractivePanelControlStyle = css<ControlledProps>`
+const InteractivePanelControlStyle = (
+  theme: Theme,
+  $controlled: boolean
+) => css`
   cursor: pointer;
-  background-color: ${({ theme }) => theme.panelControlGray};
+  background-color: ${theme.panelControlGray};
   border-radius: 0.25rem;
   min-width: 40px;
   min-height: 40px;
@@ -109,22 +114,20 @@ const InteractivePanelControlStyle = css<ControlledProps>`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${({ theme }) => theme.pureBlack};
-  width: ${({ $controlled }) => ($controlled ? 'auto' : '100%')};
+  color: ${theme.pureBlack};
+  width: ${$controlled ? 'auto' : '100%'};
 
-  ${({ $controlled, theme }) =>
-    !$controlled &&
-    `
+  ${!$controlled &&
+  `
     @media ${theme.isLargerThanPhone} {
       width: auto;
     }
   `}
 `;
 
-const PanelControlButton = styled(ButtonBase).attrs({
-  className: 'noDrag'
-})<ControlledProps>`
-  ${InteractivePanelControlStyle}
+const PanelControlButton = styled(ButtonBase)<ControlledProps>`
+  ${({ theme, $controlled }) =>
+    InteractivePanelControlStyle(theme, $controlled)}
 
   border: none;
   flex-grow: 1;
@@ -141,7 +144,8 @@ const PanelControlButton = styled(ButtonBase).attrs({
 `;
 
 const PanelControlSlider = styled.li<PanelControlSliderProps>`
-  ${InteractivePanelControlStyle}
+  ${({ theme, $controlled }) =>
+    InteractivePanelControlStyle(theme, $controlled)}
   grid-area: ${({ $gridArea }) => $gridArea};
   max-height: 40px;
 `;
@@ -165,6 +169,7 @@ const PanelButton = ({
   return (
     <PanelControlWrapper>
       <PanelControlButton
+        className="noDrag"
         aria-label={ariaLabel}
         id={id}
         onClick={onClick}

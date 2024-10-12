@@ -1,4 +1,4 @@
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from '@emotion/react';
 
 import './App.css';
 import { ControlPanel } from './components/controls/control-panel.tsx';

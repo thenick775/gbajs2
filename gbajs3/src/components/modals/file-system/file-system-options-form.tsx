@@ -1,8 +1,9 @@
+import { css } from '@emotion/css';
+import styled from '@emotion/styled';
 import { Button, Collapse } from '@mui/material';
 import { useLocalStorage } from '@uidotdev/usehooks';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { css, styled } from 'styled-components';
 
 import { emulatorCoreCallbacksLocalStorageKey } from '../../../context/emulator/consts.ts';
 import { useAddCallbacks } from '../../../hooks/emulator/use-add-callbacks.tsx';
