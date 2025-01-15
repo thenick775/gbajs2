@@ -22,6 +22,7 @@ import {
   BiMenu,
   BiFileFind
 } from 'react-icons/bi';
+import { Rnd } from 'react-rnd';
 import { styled, useTheme } from 'styled-components';
 
 import { NavigationMenuWidth } from './consts.tsx';
@@ -31,7 +32,9 @@ import {
   useEmulatorContext,
   useAuthContext,
   useModalContext,
-  useRunningContext
+  useRunningContext,
+  useDragContext,
+  useLayoutContext
 } from '../../hooks/context.tsx';
 import { useQuickReload } from '../../hooks/emulator/use-quick-reload.tsx';
 import { useLogout } from '../../hooks/use-logout.tsx';
@@ -108,7 +111,9 @@ const MenuItemWrapper = styled.ul`
   }
 `;
 
-const HamburgerButton = styled(ButtonBase)<ExpandableComponentProps>`
+const HamburgerButton = styled(ButtonBase)<
+  ExpandableComponentProps & { $areItemsDraggable: boolean }
+>`
   background-color: ${({ theme }) => theme.mediumBlack};
   color: ${({ theme }) => theme.pureWhite};
   z-index: 200;
@@ -117,6 +122,7 @@ const HamburgerButton = styled(ButtonBase)<ExpandableComponentProps>`
   top: 12px;
   transition: 0.4s ease-in-out;
   -webkit-transition: 0.4s ease-in-out;
+  transition-property: left;
   cursor: pointer;
   border-radius: 0.25rem;
   border: none;
@@ -137,6 +143,14 @@ const HamburgerButton = styled(ButtonBase)<ExpandableComponentProps>`
     outline: 0;
     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
   }
+
+  ${({ $areItemsDraggable = false, theme }) =>
+    $areItemsDraggable &&
+    `
+    outline-color: ${theme.gbaThemeBlue};
+    outline-style: dashed;
+    outline-width: 2px;
+  `}
 `;
 
 const NavigationMenuClearDismiss = styled.button`
@@ -156,12 +170,13 @@ export const NavigationMenu = () => {
   const { canvas, emulator } = useEmulatorContext();
   const { isRunning } = useRunningContext();
   const { execute: executeLogout } = useLogout();
+  const { areItemsDraggable } = useDragContext();
+  const { layouts, setLayout } = useLayoutContext();
   const theme = useTheme();
   const isLargerThanPhone = useMediaQuery(theme.isLargerThanPhone);
   const isMobileLandscape = useMediaQuery(theme.isMobileLandscape);
   const menuHeaderId = useId();
   const quickReload = useQuickReload();
-
   const isMenuItemDisabledByAuth = !isAuthenticated();
   const hasApiLocation = !!import.meta.env.VITE_GBA_SERVER_LOCATION;
 
@@ -169,16 +184,29 @@ export const NavigationMenu = () => {
 
   return (
     <>
-      <HamburgerButton
-        id="menu-btn"
-        $isExpanded={isExpanded}
-        onClick={() => setIsExpanded((prevState) => !prevState)}
-        aria-label="Menu Toggle"
+      <Rnd
+        dragAxis="y"
+        disableDragging={!areItemsDraggable}
+        enableResizing={false}
+        bounds="body"
+        position={layouts?.hamburgerButton?.position}
+        style={{ zIndex: 200 }}
+        onDragStop={(_, data) => {
+          setLayout('hamburgerButton', { position: { x: data.x, y: data.y } });
+        }}
       >
-        <BiMenu
-          style={{ height: '29px', width: '29px', verticalAlign: 'middle' }}
-        />
-      </HamburgerButton>
+        <HamburgerButton
+          id="menu-btn"
+          $isExpanded={isExpanded}
+          onClick={() => setIsExpanded((prevState) => !prevState)}
+          aria-label="Menu Toggle"
+          $areItemsDraggable={areItemsDraggable}
+        >
+          <BiMenu
+            style={{ height: '29px', width: '29px', verticalAlign: 'middle' }}
+          />
+        </HamburgerButton>
+      </Rnd>
       <NavigationMenuWrapper
         data-testid="menu-wrapper"
         id="menu-wrapper"
