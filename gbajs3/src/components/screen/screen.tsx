@@ -13,10 +13,14 @@ import {
 import { NavigationMenuWidth } from '../navigation-menu/consts.tsx';
 import { GripperHandle } from '../shared/gripper-handle.tsx';
 
+type RenderCanvasProps = {
+  $areItemsDraggable: boolean;
+};
+
 const defaultGBACanvasWidth = 240;
 const defaultGBACanvasHeight = 160;
 
-const RenderCanvas = styled.canvas`
+const RenderCanvas = styled.canvas<RenderCanvasProps>`
   background-color: ${({ theme }) => theme.pureBlack};
   image-rendering: -webkit-optimize-contrast;
   image-rendering: -moz-crisp-edges;
@@ -29,11 +33,19 @@ const RenderCanvas = styled.canvas`
   max-width: 100%;
   object-fit: contain;
   image-rendering: pixelated;
+
+  ${({ $areItemsDraggable = false, theme }) =>
+    $areItemsDraggable &&
+    `
+    outline-color: ${theme.gbaThemeBlue};
+    outline-style: dashed;
+    outline-width: 2px;
+    outline-offset: -2px;
+  `}
 `;
 
 const ScreenWrapper = styled(Rnd)<RndProps>`
   background-color: ${({ theme }) => theme.pureBlack};
-  border: solid 1px ${({ theme }) => theme.pureBlack};
   overflow: visible;
   width: 100dvw;
   height: calc(100dvw * 2 / 3);
@@ -157,6 +169,7 @@ export const Screen = () => {
         ref={refSetCanvas}
         width={defaultGBACanvasWidth}
         height={defaultGBACanvasHeight}
+        $areItemsDraggable={areItemsDraggable}
       />
     </ScreenWrapper>
   );
