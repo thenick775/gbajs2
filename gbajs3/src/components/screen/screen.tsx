@@ -13,14 +13,10 @@ import {
 import { NavigationMenuWidth } from '../navigation-menu/consts.tsx';
 import { GripperHandle } from '../shared/gripper-handle.tsx';
 
-type RenderCanvasProps = {
-  $areItemsDraggable: boolean;
-};
-
 const defaultGBACanvasWidth = 240;
 const defaultGBACanvasHeight = 160;
 
-const RenderCanvas = styled.canvas<RenderCanvasProps>`
+const RenderCanvas = styled.canvas`
   background-color: ${({ theme }) => theme.pureBlack};
   image-rendering: -webkit-optimize-contrast;
   image-rendering: -moz-crisp-edges;
@@ -33,18 +29,9 @@ const RenderCanvas = styled.canvas<RenderCanvasProps>`
   max-width: 100%;
   object-fit: contain;
   image-rendering: pixelated;
-
-  ${({ $areItemsDraggable = false, theme }) =>
-    $areItemsDraggable &&
-    `
-    outline-color: ${theme.gbaThemeBlue};
-    outline-style: dashed;
-    outline-width: 2px;
-    outline-offset: -2px;
-  `}
 `;
 
-const ScreenWrapper = styled(Rnd)<RndProps>`
+const ScreenWrapper = styled(Rnd)<RndProps & { $areItemsDraggable: boolean }>`
   background-color: ${({ theme }) => theme.pureBlack};
   overflow: visible;
   width: 100dvw;
@@ -61,6 +48,20 @@ const ScreenWrapper = styled(Rnd)<RndProps>`
   @media ${({ theme }) => theme.isMobileLandscape} {
     width: calc(100dvh * (3 / 2));
     height: 100dvh;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    margin: 2px;
+    pointer-events: none;
+    border: 2px dashed ${({ theme }) => theme.gbaThemeBlue};
+    visibility: ${({ $areItemsDraggable }) =>
+      $areItemsDraggable ? 'visible' : 'hidden'};
   }
 `;
 
@@ -163,13 +164,13 @@ export const Screen = () => {
           position: { ...position }
         });
       }}
+      $areItemsDraggable={areItemsDraggable}
     >
       <RenderCanvas
         data-testid="screen-wrapper:render-canvas"
         ref={refSetCanvas}
         width={defaultGBACanvasWidth}
         height={defaultGBACanvasHeight}
-        $areItemsDraggable={areItemsDraggable}
       />
     </ScreenWrapper>
   );
