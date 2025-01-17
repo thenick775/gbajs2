@@ -189,11 +189,11 @@ export const NavigationMenu = () => {
         disableDragging={!areItemsDraggable}
         enableResizing={false}
         bounds="body"
-        position={layouts?.hamburgerButton?.position}
+        position={layouts?.hamburgerButton?.position ?? { x: 0, y: 0 }}
         style={{ zIndex: 200 }}
-        onDragStop={(_, data) => {
-          setLayout('hamburgerButton', { position: { x: data.x, y: data.y } });
-        }}
+        onDragStop={(_, data) =>
+          setLayout('hamburgerButton', { position: { x: data.x, y: data.y } })
+        }
       >
         <HamburgerButton
           id="menu-btn"
