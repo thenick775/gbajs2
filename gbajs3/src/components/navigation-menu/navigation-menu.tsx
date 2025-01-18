@@ -1,5 +1,6 @@
 import { useMediaQuery } from '@mui/material';
-import { useId, useState } from 'react';
+import { useId, useRef, useState } from 'react';
+import Draggable from 'react-draggable';
 import toast from 'react-hot-toast';
 import {
   BiInfoCircle,
@@ -22,7 +23,6 @@ import {
   BiMenu,
   BiFileFind
 } from 'react-icons/bi';
-import { Rnd } from 'react-rnd';
 import { styled, useTheme } from 'styled-components';
 
 import { NavigationMenuWidth } from './consts.tsx';
@@ -165,6 +165,7 @@ const NavigationMenuClearDismiss = styled.button`
 
 export const NavigationMenu = () => {
   const [isExpanded, setIsExpanded] = useState(true);
+  const menuButtonRef = useRef<HTMLButtonElement | null>(null);
   const { setModalContent, setIsModalOpen } = useModalContext();
   const { isAuthenticated } = useAuthContext();
   const { canvas, emulator } = useEmulatorContext();
@@ -184,18 +185,18 @@ export const NavigationMenu = () => {
 
   return (
     <>
-      <Rnd
-        dragAxis="y"
-        disableDragging={!areItemsDraggable}
-        enableResizing={false}
-        bounds="body"
+      <Draggable
+        nodeRef={menuButtonRef}
+        bounds="parent"
+        axis="y"
         position={layouts?.hamburgerButton?.position ?? { x: 0, y: 0 }}
-        style={{ zIndex: 200 }}
-        onDragStop={(_, data) =>
-          setLayout('hamburgerButton', { position: { x: data.x, y: data.y } })
+        disabled={!areItemsDraggable}
+        onStop={(_, data) =>
+          setLayout('hamburgerButton', { position: { x: 0, y: data.y } })
         }
       >
         <HamburgerButton
+          ref={menuButtonRef}
           id="menu-btn"
           $isExpanded={isExpanded}
           onClick={() => setIsExpanded((prevState) => !prevState)}
@@ -206,7 +207,7 @@ export const NavigationMenu = () => {
             style={{ height: '29px', width: '29px', verticalAlign: 'middle' }}
           />
         </HamburgerButton>
-      </Rnd>
+      </Draggable>
       <NavigationMenuWrapper
         data-testid="menu-wrapper"
         id="menu-wrapper"
